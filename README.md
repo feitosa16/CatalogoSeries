@@ -1,5 +1,5 @@
 # Sistema de Gerenciamento de Catálogo de Séries em C++
-<img src = https://img.shields.io/badge/Status-Em-Andamento-yellow> 
+<img src = https://img.shields.io/badge/Status-Em_Andamento-yellow> 
 
 _Projeto destinado a criação de um sistema que realiza operações em um catálogo de séries, desenvolvido inteiramente em linguagem C++, tal projeto parte da incitiva da disciplina SI300 - Programação Orientada a Objetos, ministrada na Faculdade de Tecnologia da UNICAMP._
 
