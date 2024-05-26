@@ -1,46 +1,70 @@
 #include "Catalogo.h"
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
-//Adiciona uma nova série ao catalogo
-void Catalogo::addSerie(const Serie& serie) {
-    series.push_back(serie);
-}
-//Recupera uma serie pelo Id e retorna um ponteiro apra serie se encontrada
-Serie* Catalogo::getSerie(int id){
-    for (auto& serie : series){
-        if(serie.getId() == id){
-            return &serie;
-        }   
-        return nullptr;
-    }
+Catalogo::Catalogo(DAO* dao) : dao(dao) {}
+
+void Catalogo::incluirSerie(const SerieDTO& serie) {
+    dao->salvar(serie);
 }
 
-// Edita uma série existente pelo ID, substituindo pelos novos dados da série, retorna true se a série foi encontrada e editada, caso contrário retorna false
-bool Catalogo::editSerie(int id, const Serie& novaSerie) {
-    for (auto& serie : series) {
-        if (serie.getId() == id) {
-            serie = novaSerie;
-            return true;
-        }
-    }
-    return false;
+SerieDTO Catalogo::recuperarSerie(int id) {
+    return dao->buscar(id);
 }
 
-// Remove uma série pelo ID, retorna true se a série foi encontrada e removida, caso contrário retorna false
-bool Catalogo::removeSerie(int id) {
-    for (auto it = series.begin(); it != series.end(); ++it) {
-        if (it->getId() == id) {
-            series.erase(it);
-            return true;
-        }
-    }
-    return false;
+void Catalogo::editarSerie(const SerieDTO& serie) {
+    dao->atualizar(serie);
 }
-//Exibe todas as series no catálogo 
-void Catalogo::displaySeries() const {
+
+void Catalogo::excluirSerie(int id) {
+    dao->remover(id);
+}
+
+void Catalogo::listarSeries() const {
+    auto series = dao->listarSeries();
     for (const auto& serie : series) {
         serie.display();
         cout << "----------------------" << endl;
+    }
+}
+
+void Catalogo::listarSeriesOrdenadasPorTitulo() const {
+    auto series = dao->listarSeries();
+    sort(series.begin(), series.end(), [](SerieDTO a, SerieDTO b) {
+        return a.getNome() < b.getNome();
+    });
+    for (const auto& serie : series) {
+        serie.display();
+    }
+}
+
+void Catalogo::listarSeriesOrdenadasPorCanal() const {
+    auto series = dao->listarSeries();
+    sort(series.begin(), series.end(), [](SerieDTO a, SerieDTO b) {
+        return a.getCanal() < b.getCanal();
+    });
+    for (const auto& serie : series) {
+        serie.display();
+    }
+}
+
+void Catalogo::listarSeriesOrdenadasPorAno() const {
+    auto series = dao->listarSeries();
+    sort(series.begin(), series.end(), [](SerieDTO a, SerieDTO b) {
+        return a.getAno() < b.getAno();
+    });
+    for (const auto& serie : series) {
+        serie.display();
+    }
+}
+
+void Catalogo::listarSeriesOrdenadasPorNota() const {
+    auto series = dao->listarSeries();
+    sort(series.begin(), series.end(), [](SerieDTO a, SerieDTO b) {
+        return a.getNota() < b.getNota();
+    });
+    for (const auto& serie : series) {
+        serie.display();
     }
 }

@@ -1,10 +1,10 @@
-#ifndef SERIE_H
-#define SERIE_H
+#ifndef SERIEDTO_H
+#define SERIEDTO_H
 
 #include <string>
 using namespace std;
 
-class Serie {
+class SerieDTO {
 private:
     int id;
     string nome;
@@ -17,8 +17,8 @@ private:
     int nota;
 
 public:
-    Serie(int id, string nome, int ano, int temporadas, int numEpisodios,
-          string atores, string personagens, string canal, int nota);
+    SerieDTO(int id, string nome, int ano, int temporadas, int numEpisodios,
+             string atores, string personagens, string canal, int nota);
 
     int getId() const;
     string getNome() const;
@@ -43,4 +43,4 @@ public:
     void display() const;
 };
 
-#endif // SERIE_H
+#endif // SERIEDTO_H

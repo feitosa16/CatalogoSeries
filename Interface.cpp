@@ -2,17 +2,20 @@
 #include <iostream>
 using namespace std;
 
+Interface::Interface(Catalogo* catalogo) : catalogo(catalogo) {}
 
-//Exibe menu principal
 void Interface::exibirMenuPrincipal() {
     cout << "Menu Principal" << endl;
     cout << "1. Séries" << endl;
-    cout << "2. Sair" << endl;
+    cout << "2. Relatórios" << endl;
+    cout << "3. Ajuda" << endl;
+    cout << "4. Créditos" << endl;
+    cout << "5. Sair" << endl;
     cout << "Escolha uma opção: ";
 }
-//Exibe o submenu da serie 
+
 void Interface::exibirSubmenuSeries() {
-  cout << "Submenu Séries" << endl;
+    cout << "Submenu Séries" << endl;
     cout << "1. Incluir um novo registro" << endl;
     cout << "2. Recuperar um registro" << endl;
     cout << "3. Editar um registro" << endl;
@@ -22,7 +25,16 @@ void Interface::exibirSubmenuSeries() {
     cout << "Escolha uma opção: ";
 }
 
-//Inclui uma nova serie no catalogo
+void Interface::exibirRelatorios() {
+    cout << "Relatórios" << endl;
+    cout << "1. Ordenar por Título" << endl;
+    cout << "2. Ordenar por Canal/Streaming" << endl;
+    cout << "3. Ordenar por Ano" << endl;
+    cout << "4. Ordenar por Nota" << endl;
+    cout << "5. Voltar ao menu principal" << endl;
+    cout << "Escolha uma opção: ";
+}
+
 void Interface::incluirSerie() {
     string nome, atores, personagens, canal;
     int ano, temporadas, numEpisodios, nota;
@@ -46,26 +58,25 @@ void Interface::incluirSerie() {
     cout << "Digite a nota de classificação (0-10): ";
     cin >> nota;
 
-    Serie novaSerie(nextId++, nome, ano, temporadas, numEpisodios, atores, personagens, canal, nota);
-    catalogo.addSerie(novaSerie);
+    SerieDTO novaSerie(nextId++, nome, ano, temporadas, numEpisodios, atores, personagens, canal, nota);
+    catalogo->incluirSerie(novaSerie);
 
     cout << "Série adicionada com sucesso!" << endl;
 }
 
-// Recupera uma série pelo ID
 void Interface::recuperarSerie() {
     int id;
     cout << "Digite o ID da série a ser recuperada: ";
     cin >> id;
 
-    Serie* serie = catalogo.getSerie(id);
-    if (serie) {
-        serie->display();
-    } else {
+    try {
+        SerieDTO serie = catalogo->recuperarSerie(id);
+        serie.display();
+    } catch (const std::exception& e) {
         cout << "Série não encontrada." << endl;
     }
 }
-// Edita uma série pelo ID
+
 void Interface::editarSerie() {
     int id, ano, temporadas, numEpisodios, nota;
     string nome, atores, personagens, canal;
@@ -73,8 +84,8 @@ void Interface::editarSerie() {
     cout << "Digite o ID da série a ser editada: ";
     cin >> id;
 
-    Serie* serie = catalogo.getSerie(id);
-    if (serie) {
+    try {
+        SerieDTO serie = catalogo->recuperarSerie(id);
         cout << "Digite o novo nome: ";
         cin.ignore();
         getline(cin, nome);
@@ -94,33 +105,31 @@ void Interface::editarSerie() {
         cout << "Digite a nova nota de classificação (0-10): ";
         cin >> nota;
 
-        Serie novaSerie(id, nome, ano, temporadas, numEpisodios, atores, personagens, canal, nota);
-        if (catalogo.editSerie(id, novaSerie)) {
-            cout << "Série editada com sucesso!" << endl;
-        } else {
-            cout << "Erro ao editar a série." << endl;
-        }
-    } else {
+        SerieDTO novaSerie(id, nome, ano, temporadas, numEpisodios, atores, personagens, canal, nota);
+        catalogo->editarSerie(novaSerie);
+
+        cout << "Série editada com sucesso!" << endl;
+    } catch (const std::exception& e) {
         cout << "Série não encontrada." << endl;
     }
 }
 
-// Exclui uma série pelo ID
 void Interface::excluirSerie() {
     int id;
     cout << "Digite o ID da série a ser excluída: ";
     cin >> id;
 
-    if (catalogo.removeSerie(id)) {
+    try {
+        catalogo->excluirSerie(id);
         cout << "Série excluída com sucesso!" << endl;
-    } else {
+    } catch (const std::exception& e) {
         cout << "Série não encontrada." << endl;
     }
 }
 
 void Interface::iniciar() {
-      int opcao = 0;
-    while (opcao != 2) {
+    int opcao = 0;
+    while (opcao != 5) {
         exibirMenuPrincipal();
         cin >> opcao;
 
@@ -145,7 +154,7 @@ void Interface::iniciar() {
                     excluirSerie();
                     break;
                 case 5:
-                    catalogo.displaySeries();
+                    catalogo->listarSeries();
                     break;
                 case 6:
                     break;
@@ -155,10 +164,59 @@ void Interface::iniciar() {
             } while (subopcao != 6);
             break;
         case 2:
+            int relatorioOpcao;
+            do {
+                exibirRelatorios();
+                cin >> relatorioOpcao;
+
+                switch (relatorioOpcao) {
+                case 1:
+                    catalogo->listarSeriesOrdenadasPorTitulo();
+                    break;
+                case 2:
+                    catalogo->listarSeriesOrdenadasPorCanal();
+                    break;
+                case 3:
+                    catalogo->listarSeriesOrdenadasPorAno();
+                    break;
+                case 4:
+                    catalogo->listarSeriesOrdenadasPorNota();
+                    break;
+                case 5:
+                    break;
+                default:
+                    cout << "Opção inválida!" << endl;
+                }
+            } while (relatorioOpcao != 5);
+            break;
+        case 3:
+            mostrarAjuda();
+            break;
+        case 4:
+            mostrarCreditos();
+            break;
+        case 5:
             cout << "Saindo..." << endl;
             break;
         default:
             cout << "Opção inválida!" << endl;
         }
     }
+}
+
+void Interface::mostrarAjuda() {
+    cout << "Ajuda: Este programa permite gerenciar um catálogo de séries." << endl;
+    cout << "Comandos disponíveis:" << endl;
+    cout << "1. Adicionar série" << endl;
+    cout << "2. Listar séries" << endl;
+    cout << "3. Buscar série" << endl;
+    cout << "4. Relatórios" << endl;
+    cout << "5. Ajuda" << endl;
+    cout << "6. Créditos" << endl;
+    cout << "7. Sair" << endl;
+}
+
+void Interface::mostrarCreditos() {
+    cout << "Desenvolvido por: Camila Lordelo, Gabriela Januario, Geovanne Pereira, Heloisa Feitosa e Thalita Auad" << endl;
+    cout << "FT - Unicamp, 2024." << endl;
 }

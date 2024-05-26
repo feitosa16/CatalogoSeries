@@ -6,8 +6,8 @@ using namespace std;
 
 class Interface {
 private:
-    Catalogo catalogo; //objeto para gerenciar as series 
-    int nextId = 1; //id para a proxima serie adicionada
+    Catalogo* catalogo; // Objeto para gerenciar as séries 
+    int nextId = 1; // ID para a próxima série adicionada
 
     void exibirMenuPrincipal();
     void exibirSubmenuSeries();
@@ -15,8 +15,12 @@ private:
     void recuperarSerie();
     void editarSerie();
     void excluirSerie();
+    void exibirRelatorios();
+    void mostrarAjuda();
+    void mostrarCreditos();
 
 public:
+    Interface(Catalogo* catalogo);
     void iniciar();
 };
 
