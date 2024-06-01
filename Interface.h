@@ -2,11 +2,14 @@
 #define INTERFACE_H
 
 #include "Catalogo.h"
+#include "DAO.h"
+
 using namespace std;
 
 class Interface {
 private:
     Catalogo* catalogo; // Objeto para gerenciar as séries 
+    DAO& dao; // Objeto DAO para gerenciar persistência de dados
     int nextId = 1; // ID para a próxima série adicionada
 
     void exibirMenuPrincipal();
@@ -20,7 +23,7 @@ private:
     void mostrarCreditos();
 
 public:
-    Interface(Catalogo* catalogo);
+    Interface(Catalogo* catalogo, DAO& dao);
     void iniciar();
 };
 
