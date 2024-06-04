@@ -1,28 +1,24 @@
 {
+    "version": "2.0.0",
     "tasks": [
         {
-            "type": "cppbuild",
-            "label": "C/C++: g++ arquivo de build ativo",
-            "command": "/usr/bin/g++",
+            "label": "build",
+            "type": "shell",
+            "command": "g++",
             "args": [
-                "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                "\"${file}\"",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
-            ],
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "problemMatcher": [
-                "$gcc"
+                "\"${fileDirname}/${fileBasenameNoExtension}.exe\"",
+                "-I\"C:/Program Files/MariaDB/MariaDB C++ Connector 64-bit/include\"",
+                "-L\"C:/Program Files/MariaDB/MariaDB C++ Connector 64-bit\"",
+                "-lmariadbcpp"
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "Tarefa gerada pelo Depurador."
+            "problemMatcher": ["$gcc"]
         }
-    ],
-    "version": "2.0.0"
+    ]
 }

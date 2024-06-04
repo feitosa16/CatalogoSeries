@@ -1,4 +1,6 @@
+#include <iostream>
 #include "Interface.h"
+#include "MariaDBDAO.h"
 #include "MemoriaDAO.h"
 
 int main() {
@@ -6,5 +8,10 @@ int main() {
     Catalogo catalogo(&dao);
     Interface interface(&catalogo);
     interface.iniciar();
+
+    MariaDBDAO dao;
+    Interface interface(dao);
+    interface.run();
+
     return 0;
 }
